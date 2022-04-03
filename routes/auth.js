@@ -31,5 +31,33 @@ router.post('/signup', function(request, response) {
     });
 });
 
+//show user info
+router.post('/user', function(request, response) {
+    var post = request.body;
+
+    db.query(
+        `SELECT * FROM user WHERE user_id=?`, [post.user_id],
+        function(error, result) {
+            if(error) {
+                throw error;
+            }
+            if (!result.length) { //no user
+                response.json({
+                    "result": "fail"
+                });
+            }
+            else {
+                //user info
+                response.json({
+                    "result": "success",
+                    "user_name": result[0].user_name,
+                    "user_email": result[0].user_email,
+                    "user_password": result[0].user_password
+                });
+            }
+        }
+    );
+});
+
 
 module.exports = router;
