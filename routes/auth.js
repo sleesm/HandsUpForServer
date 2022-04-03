@@ -89,5 +89,32 @@ router.post('/user/update', function(request, response) {
     });
 });
 
+// delete user
+router.post('/user/delete', function(request, response) {
+    var post = request.body;
+
+    db.query(`SELECT * FROM user WHERE user_email=?`, [post.email],
+        function(error, result) {
+            if(error) {
+                throw error;
+            }
+            if(result[0].user_password === post.password) { //check for password
+                db.query(`DELETE FROM user WHERE user_email=?`, [post.email],
+                    function(error, result) {
+                        if(error) {
+                            throw error;
+                        }
+                        response.json({
+                            "result": "success"
+                        });
+                });
+            }
+            else {
+                response.json({
+                    "result": "fail"
+                });
+            }
+    });
+});
 
 module.exports = router;
