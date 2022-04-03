@@ -31,6 +31,37 @@ router.post('/signup', function(request, response) {
     });
 });
 
+//sign in
+router.post('/signin', function(request, response) {
+    var post = request.body;
+
+    db.query(
+        `SELECT * FROM user WHERE user_email=?`, [post.email],
+        function(error, result) {
+            if(error) {
+                throw error;
+            }
+            if (!result.length) { //no user
+                response.json({
+                    "result": "fail"
+                });
+            }
+            else if(result[0].user_password === post.password) { //success sign in
+                response.json({
+                    "result": "success",
+                    "user_id": result[0].user_id
+                });
+            }
+            else { //fail sign in
+                response.json({
+                    "result": "fail"
+                });
+            }
+        }
+    );
+});
+
+
 //show user info
 router.post('/user', function(request, response) {
     var post = request.body;
