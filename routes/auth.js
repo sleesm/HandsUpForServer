@@ -59,5 +59,35 @@ router.post('/user', function(request, response) {
     );
 });
 
+// update user info
+router.post('/user/update', function(request, response) {
+    var post = request.body;
+
+    db.query(`SELECT COUNT(*) AS emailCount FROM user WHERE user_email=?`, [post.email],
+        function(error, result) {
+            if(error) {
+                throw error;
+            }
+            if(result[0].emailCount == 0) { //check for duplicate email address
+                db.query(
+                    `UPDATE user SET user_name=?, user_email=?, user_password=? WHERE user_id=?`, [post.name, post.email, post.password, post.user_id],
+                    function(error, result) {
+                        if(error) {
+                            throw error;
+                        }
+                        response.json({
+                            "result": "success"
+                        });
+                    }
+                );
+            }
+            else {
+                response.json({
+                    "result": "fail"
+                });
+            }
+    });
+});
+
 
 module.exports = router;
