@@ -19,7 +19,7 @@ async function getUserIdByEmail(req, res) {
         res.json({"result": "fail"});
     else{
         if(result[0].user_password == post.password) //success sign in
-            res.json({"result": "success", "user_id": result[0].user_id});
+            res.json({"result": "success", "user_id": result[0].user_id, "user_name": result[0].user_name});
         else
             res.json({"result": "fail"});
     }
