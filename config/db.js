@@ -10,7 +10,6 @@ const pool = {
 };
 
 
-
 module.exports = mysql.createPool(pool);
 
 // db.connect();
