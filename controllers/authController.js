@@ -1,4 +1,4 @@
-const userModel = require("../models/auth_model");
+const userModel = require("../models/authModel");
 
 //for sign in, insert user
 async function postUserInfo(req, res) {
@@ -55,32 +55,36 @@ async function updateUserInfo(req, res) {
 async function getUserPasswordCorrect(req) {
     var post = req.body;
     var result = await userModel.getUserByEmail(post.email);
-    return new Promise(function(resolve, reject) {
-        if(!result.length)
-            resolve(false);
-        else{
-            if(result[0].user_password == post.password) //success sign in
-                resolve(result[0].user_id);
-            else
-                resolve(false);
-        }
-    });
+
+    if(!result.length)
+        return false;
+    else{
+        if(result[0].user_password == post.password) //success sign in
+            return result[0].user_id;
+        else
+            return false;
+    }
         
 }
 
 //for delete user info, get user info by user id
 async function deleteUser(req, res) {
     var post = req.body;
-    var result = await userModel.deleteUserById(post.user_id);
-    if(!result)
+    var correctResult = await getUserPasswordCorrect(req);
+    if(correctResult == false) {
         res.json({"result": "fail"});
-    else {
-        if(result.affectedRows != 1)
-            res.json({"result": "fail"});
-        else
-            res.json({"result": "success"});
     }
-    
+    else {
+        var result = await userModel.deleteUserById(correctResult);
+        if(!result)
+            res.json({"result": "fail"});
+        else {
+            if(result.affectedRows != 1)
+                res.json({"result": "fail"});
+            else
+                res.json({"result": "success"});
+        }
+    }
 }
 
 module.exports = {
