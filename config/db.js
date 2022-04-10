@@ -11,7 +11,3 @@ const pool = {
 
 
 module.exports = mysql.createPool(pool);
-
-// db.connect();
-// console.log("success DB connection");
-// module.exports = db;

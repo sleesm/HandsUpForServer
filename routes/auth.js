@@ -3,10 +3,10 @@ var router = express.Router();
 var authController = require('../controllers/authController');
 
 //sign up
-router.post('/signup',authController.postUserInfo);
+router.post('/signup',authController.createUser);
 
 //sign in
-router.post('/signin', authController.getUserIdByEmail);
+router.post('/signin', authController.checkUserByEmail);
 
 //show user info
 router.post('/user', authController.getUserInfoById);

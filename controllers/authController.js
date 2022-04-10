@@ -1,7 +1,7 @@
 const userModel = require("../models/authModel");
 
-//for sign in, insert user
-async function postUserInfo(req, res) {
+//for sign up, insert user
+async function createUser(req, res) {
     var post = req.body;
     var userInfo = [ post.name, post.email, post.password];
     var result = await userModel.insertUser(userInfo);
@@ -11,8 +11,8 @@ async function postUserInfo(req, res) {
         res.json({"result": "success"});
 }
 
-//for sign up, check email and password
-async function getUserIdByEmail(req, res) {
+//for sign in, check email and password
+async function checkUserByEmail(req, res) {
     var post = req.body;
     var result = await userModel.getUserByEmail(post.email);
     if(!result.length)
@@ -88,8 +88,8 @@ async function deleteUser(req, res) {
 }
 
 module.exports = {
-    postUserInfo,
-    getUserIdByEmail,
+    createUser,
+    checkUserByEmail,
     getUserInfoById,
     updateUserInfo,
     getUserPasswordCorrect,
