@@ -7,7 +7,7 @@ async function getBuiltInCategory(req, res) {
         res.json({"result": "fail"});
     else {
         var categories = JSON.parse(result);
-        res.json({"result": "success", categories});
+        res.json({"result": "success", "categories": categories});
     }
 }
 
@@ -34,7 +34,7 @@ async function getCard(req, res) {
             res.json({"result": "fail"});
         else {
             var cards = JSON.parse(result);
-            res.json({"result": "success", cards});
+            res.json({"result": "success", "cards": cards});
         }
     }
     else { //if category is customed -> TO-DO
