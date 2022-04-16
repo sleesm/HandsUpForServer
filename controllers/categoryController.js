@@ -67,7 +67,13 @@ async function addCustomCard(req, res) {
 
     //add in card_custom_info table
     else {
-        res.json({"result": card_id});
+        sendValue = [post.user_id, card_id];
+        var card_custom_id = await categoryModel.insertCustomCard(sendValue);
+        if(!card_custom_id)
+            res.json({"result": "fail"});
+        else {
+            res.json({"result": "success", "card_id": card_id, "custom_card_id" : card_custom_id, "card_name" : post.name, "card_img_path" : post.img_path});
+        }
     }
 }
 

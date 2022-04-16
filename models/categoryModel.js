@@ -108,11 +108,26 @@ async function insertCard(sendValue) {
     }
 }
 
+//insert custom card
+async function insertCustomCard(sendValue) {
+    const query = `INSERT INTO card_custom_info (user_id, card_id) VALUES (?, ?)`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                return null;
+            });
+        return result.insertId;
+    } catch(error) {
+        return null;
+    }
+}
+
 module.exports = {
     getBuiltInCategory,
     checkCategoryisBuiltIn,
     insertCategory,
     insertCustomCategory,
     getBuiltInCard,
-    insertCard
+    insertCard,
+    insertCustomCard
 }
