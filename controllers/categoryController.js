@@ -55,8 +55,25 @@ async function getCard(req, res) {
     }
 }
 
+//create custom card
+async function addCustomCard(req, res) {
+    var post = req.body;
+    var sendValue = [post.category_id, post.name, post.img_path, 0]; //send category id, card name, card image path and is custom(0)
+
+    //add in card tabel
+    var card_id = await categoryModel.insertCard(sendValue);
+    if(!card_id)
+        res.json({"result": "fail"});
+
+    //add in card_custom_info table
+    else {
+        res.json({"result": card_id});
+    }
+}
+
 module.exports = {
     getBuiltInCategory,
     addCustomCategory,
-    getCard
+    getCard,
+    addCustomCard
 }
