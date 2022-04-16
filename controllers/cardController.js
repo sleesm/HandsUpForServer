@@ -31,7 +31,6 @@ async function addCustomCard(req, res) {
     var card_id = await cardModel.insertCard(sendValue);
     if(!card_id)
         res.json({"result": "fail"});
-
     //add in card_custom_info table
     else {
         sendValue = [post.user_id, card_id];

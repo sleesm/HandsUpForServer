@@ -20,7 +20,6 @@ async function addCustomCategory(req, res) {
     var category_id = await categoryModel.insertCategory(sendValue);
     if(!category_id)
         res.json({"result": "fail"});
-    
     //add in category_custom_info table
     else {
         sendValue = [post.user_id, category_id, 0, post.access];
