@@ -41,6 +41,20 @@ async function checkCategoryisBuiltIn(category_id) {
     }
 }
 
+//insert custom category
+async function insertCategory(sendValue) {
+    const query = `INSERT INTO category (category_name, category_is_built_in) VALUES (?, ?)`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                return null;
+            });
+        return result.insertId;
+    } catch(error) {
+        return null;
+    }
+}
+
 async function getBuiltInCard(category_id) {
     const query = `SELECT * FROM card WHERE category_id = ?`;
     try {
@@ -69,5 +83,6 @@ async function getBuiltInCard(category_id) {
 module.exports = {
     getBuiltInCategory,
     checkCategoryisBuiltIn,
+    insertCategory,
     getBuiltInCard
 }

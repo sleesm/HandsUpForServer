@@ -11,6 +11,22 @@ async function getBuiltInCategory(req, res) {
     }
 }
 
+//create custom category
+async function addCustomCategory(req, res) {
+    var post = req.body;
+    var sendValue = [post.name, 0]; //send category name and is custom(0)
+
+    //add in category tabel
+    var category_id = await categoryModel.insertCategory(sendValue);
+    if(!category_id)
+        res.json({"result": "fail"});
+    
+    //add in category_custom_info table
+    else {
+        
+    }
+}
+
 //get cards corresponding to category id
 async function getCard(req, res) {
     var post = req.body;
@@ -34,5 +50,6 @@ async function getCard(req, res) {
 
 module.exports = {
     getBuiltInCategory,
+    addCustomCategory,
     getCard
 }
