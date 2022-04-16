@@ -8,10 +8,4 @@ router.get('/',categoryController.getBuiltInCategory);
 //create custom category
 router.post('/create', categoryController.addCustomCategory);
 
-//get cards corresponding to categories
-router.post('/card', categoryController.getCard);
-
-//create custom card
-router.post('/card/create', categoryController.addCustomCard);
-
 module.exports = router;
