@@ -1,7 +1,8 @@
 require('dotenv').config();
 const axios = require('axios');
+const gameModel = require("../models/gameModel");
 
-async function getGameResult(req, res){
+async function getSimilarityResult(translated, req, res){
     var post = req.body;
     let result = await axios({
         method: "post",
@@ -10,7 +11,7 @@ async function getGameResult(req, res){
             'access_key': process.env.ACCESS_KEY,
             'argument': {
                 'first_word': post.answer,
-                'second_word': post.result,
+                'second_word': translated,
             }
         },
         headers: {
@@ -33,6 +34,14 @@ async function getGameResult(req, res){
     });
 
     return result;
+}
+
+async function getGameResult(req,res){
+    var post = req.body;
+    gameModel.translateText(post.result,"ko").then(function(result){
+        console.log(result[0]);
+        getSimilarityResult(result[0],req,res);
+    });
 }
 
 module.exports = {getGameResult}
