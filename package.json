@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@google-cloud/translate": "^6.3.1",
+    "@google-cloud/vision": "^2.4.2",
     "axios": "^0.27.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

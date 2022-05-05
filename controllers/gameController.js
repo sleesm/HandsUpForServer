@@ -2,7 +2,28 @@ require('dotenv').config();
 const axios = require('axios');
 const gameModel = require("../models/gameModel");
 
-async function getSimilarityResult(translated, req, res){
+async function getTextResult () {
+    //get text from game Model - getText
+}
+
+async function getObjectResult(req, res) {
+    var post = req.body;
+    var img = post.base64;
+    let buf = Buffer.from(img, 'base64');
+    gameModel.getObject(buf).then(function(result){
+        console.log(result);
+    });
+}
+
+async function getGameResult(req,res) {
+    var post = req.body;
+    gameModel.translateText(post.result,"ko").then(function(result){
+        console.log(result[0]);
+        getSimilarityResult(result[0],req,res);
+    });
+}
+
+async function getSimilarityResult(translated, req, res) {
     var post = req.body;
     let result = await axios({
         method: "post",
@@ -36,12 +57,8 @@ async function getSimilarityResult(translated, req, res){
     return result;
 }
 
-async function getGameResult(req,res){
-    var post = req.body;
-    gameModel.translateText(post.result,"ko").then(function(result){
-        console.log(result[0]);
-        getSimilarityResult(result[0],req,res);
-    });
+module.exports = {
+    getTextResult,
+    getObjectResult,
+    getGameResult
 }
-
-module.exports = {getGameResult}
