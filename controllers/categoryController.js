@@ -50,7 +50,7 @@ async function addCustomCategory(req, res) {
             res.json({"result": "fail"});
         else {
             res.json({"result": "success", "category_id" : category_id, "category_custom_id": category_custom_id, "category_name" : post.name,
-            "category_access" : post.access, "category_shared_count" : 0 });
+            "category_access" : post.access });
         }
     }
 }

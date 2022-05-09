@@ -100,7 +100,7 @@ async function insertCategory(sendValue) {
 
 //insert custom category
 async function insertCustomCategory(sendValue) {
-    const query = `INSERT INTO category_custom_info (user_id, category_id, category_shared_count, category_access) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO category_custom_info (user_id, category_id, category_access) VALUES (?, ?, ?)`;
     try {
         const result = await pool.queryParam(query, sendValue).catch(
             function (error) {
