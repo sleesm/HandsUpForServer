@@ -22,14 +22,21 @@ async function getObject(buf) {
 
     let [result] = await client.objectLocalization(buf);
     let objects = result.localizedObjectAnnotations;
-    let name = objects[0].name;
+    if (objects.length === 0) {
+      return false;
+    }
+    else {
+      let name = objects[0].name;
+      console.log(name);
+      return name;
+    }
+    // use it when we have to consider candidates
     // objects.forEach(object => {
     //     name = object.name;
     //     console.log(`Name: ${object.name}`);
     //     console.log(`Confidence: ${object.score}`);
     //     return;
     // });
-    return name;
 
   } catch (error) {
       console.error(error);
