@@ -12,7 +12,19 @@ async function getResultByGameVersion(req, res) {
 }
 
 async function getTextResult (req, res) {
-    //get text from game Model - getText
+    var post = req.body;
+    var img = post.image;
+    let buf = Buffer.from(img, 'base64');
+
+    gameModel.getText(buf).then(function(result){
+        if(result == false)
+            res.json({"result": "fail"});
+        else if(post.answer == result)
+            res.json({"result": "success", "correct" : "correct"});
+        else{
+            res.json({"result": "success", "correct" : "incorrect"});
+        }
+    });
 }
 
 async function getObjectResult(req, res) {
@@ -23,7 +35,7 @@ async function getObjectResult(req, res) {
         if(result == false)
             res.json({"result": "fail"});
         else if(!result)
-            res.json({"result": "success", "correct" : false});
+            res.json({"result": "success", "correct" : "incorrect"});
         else{
             getTranslateResult(result, req, res);
         }
