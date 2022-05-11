@@ -31,19 +31,19 @@ async function getCustomCategoryInfo(user_id){
             function (error) {
                 console.log(error);
                 return null;
-            });
-            var customCategoryInfo = [];
-            //get id and name
-            for (cate of result) {
-                var customCategory = {};
-                customCategory.category_custom_id = cate.category_custom_info_id;
-                customCategory.category_id = cate.category_id;
-                customCategory.category_access = cate.category_access;
-                customCategory.user_id = cate.user_id;
-                customCategoryInfo.push(category);
-            }
-            customCategoryInfo = JSON.stringify(customCategoryInfo);
-            return customCategoryInfo;
+        });
+        var customCategoryInfo = [];
+        //get id and name
+        for (cate of result) {
+            var customCategory = {};
+            customCategory.category_custom_id = cate.category_custom_info_id;
+            customCategory.category_id = cate.category_id;
+            customCategory.category_access = cate.category_access;
+            customCategory.user_id = cate.user_id;
+            customCategoryInfo.push(customCategory);
+        }
+        customCategoryInfo = JSON.stringify(customCategoryInfo);
+        return customCategoryInfo;
     } catch(error) {
         return false;
     }
@@ -56,12 +56,14 @@ async function getSpecificCateogy(category_id){
             function (error) {
                 console.log(error);
                 return null;
-            });
-            var category = {};
+        });
+        var category = {};
+        for (cate of result) {
             category.category_id = cate.category_id;
             category.category_name = cate.category_name;
-            category = JSON.stringify(category);
-            return category;
+        }
+        category = JSON.stringify(category);
+        return category;
     } catch(error) {
         return false;
     }
@@ -104,6 +106,7 @@ async function insertCustomCategory(sendValue) {
     try {
         const result = await pool.queryParam(query, sendValue).catch(
             function (error) {
+                console.log(error);
                 return null;
             });
         return result.insertId;
