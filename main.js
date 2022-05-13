@@ -8,7 +8,8 @@ var gameRouter = require('./routes/game');
 app.use(express.json());
 app.use(express.urlencoded({
     limit: "50mb",
-    extended: false
+    extended: true,
+    parameterLimit:50000
 }));
 app.use(express.json({
     limit: "50mb"

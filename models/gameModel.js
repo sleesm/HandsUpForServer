@@ -12,8 +12,26 @@ async function translateText(text, target) {
   return translations;
 }
 
-async function getText() {
-  // get text using vision api
+async function getText(buf) {
+  try{
+    const client = new vision.ImageAnnotatorClient(); // Creates a client
+
+    let [result] = await client.textDetection(buf);
+    let detections = result.textAnnotations;
+
+    if (detections.length === 0) {
+      return false;
+    }
+    else {
+      //choose first result 
+      let result = detections[0].description.trim();
+      console.log(result);
+      return result;
+    }
+  } catch (error) {
+      console.error(error);
+      return false;
+  }
 }
 
 async function getObject(buf) {
