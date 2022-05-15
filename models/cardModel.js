@@ -3,7 +3,7 @@ const {Storage} = require('@google-cloud/storage');
 // const stream = require('stream');
 
 async function getCards(category_id) {
-    const query = ``;
+    const query = `SELECT * FROM card WHERE card.category_id=? AND (card.card_is_built_in=true OR (SELECT card_custom_info.card_id FROM card_custom_info WHERE card_custom_info.user_id=? AND card_custom_info.card_id=card.card_id));`;
     try {
         const result = await pool.queryParam(query, category_id).catch(
             function (error) {
@@ -15,9 +15,9 @@ async function getCards(category_id) {
         for (ca of result) {
             var card = {};
             card.card_id = ca.card_id;
-            card.custom_card_id = null;
             card.card_name = ca.card_name;
             card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
             cardInfo.push(card);
         }
         cardInfo = JSON.stringify(cardInfo);
@@ -40,9 +40,9 @@ async function getBuiltInCards(category_id) {
         for (ca of result) {
             var card = {};
             card.card_id = ca.card_id;
-            card.custom_card_id = null;
             card.card_name = ca.card_name;
             card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
             cardInfo.push(card);
         }
         cardInfo = JSON.stringify(cardInfo);
@@ -66,9 +66,9 @@ async function getCustomCards(sendValue) { // category_id, user_id
             var card = {};
             card.category_id =  ca.category_id;
             card.card_id = ca.card_id;
-            card.custom_card_id = ca.card_custom_info_id;
             card.card_name = ca.card_name;
             card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
             cardInfo.push(card);
         }
         cardInfo = JSON.stringify(cardInfo);

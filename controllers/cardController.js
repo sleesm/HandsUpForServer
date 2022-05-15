@@ -1,6 +1,7 @@
 const cardModel = require("../models/cardModel");
 const categoryModel = require("../models/categoryModel");
 
+//get all cards using category_id and user_id
 async function getCard(req,res){
     var post = req.body;
     var sendValue = [post.category_id, post.user_id];
@@ -13,7 +14,7 @@ async function getCard(req,res){
     }
 }
 
-//get cards corresponding to category id
+//get built-in cards using category_id
 async function getBuiltInCard(req, res) {
     var post = req.body;
     var result = await cardModel.getBuiltInCards(post.category_id);
@@ -25,6 +26,7 @@ async function getBuiltInCard(req, res) {
     }
 }
 
+//get custom cards using category_id and user_id
 async function getCustomCard(req,res){
     var post = req.body;
     var sendValue = [post.category_id, post.user_id];
@@ -59,7 +61,7 @@ async function addCustomCard(req, res) {
         if(!card_custom_id)
             res.json({"result": "fail"});
         else {
-            res.json({"result": "success", "card_id": card_id, "custom_card_id" : card_custom_id, "card_name" : post.name, "card_img_path" : post.img_path});
+            res.json({"result": "success", "card_id": card_id, "card_name" : post.name, "card_img_path" : post.img_path});
         }
     }   
 }
