@@ -1,49 +1,72 @@
 const cardModel = require("../models/cardModel");
 const categoryModel = require("../models/categoryModel");
 
-//get cards corresponding to category id
-async function getCard(req, res) {
+async function getCard(req,res){
     var post = req.body;
-    //check if category is built-in or custom
-    var checkResult = await categoryModel.checkCategoryisBuiltIn(post.category_id);
-    if(!checkResult)
+    var sendValue = [post.category_id, post.user_id];
+    var result = await cardModel.getCards(sendValue);
+    if(!result)
         res.json({"result": "fail"});
-    if(checkResult == true) { //if category is built-in
-        var result = await cardModel.getBuiltInCard(post.category_id);
-        if(!result)
-            res.json({"result": "fail"});
-        else {
-            var cards = JSON.parse(result);
-            res.json({"result": "success", "cards": cards});
-        }
+    else {
+        var cards = JSON.parse(result);
+        res.json({"result": "success", "cards": cards});
     }
-    else { //if category is customed -> TO-DO
+}
 
+//get cards corresponding to category id
+async function getBuiltInCard(req, res) {
+    var post = req.body;
+    var result = await cardModel.getBuiltInCards(post.category_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        var cards = JSON.parse(result);
+        res.json({"result": "success", "cards": cards});
+    }
+}
+
+async function getCustomCard(req,res){
+    var post = req.body;
+    var sendValue = [post.category_id, post.user_id];
+    var result = await cardModel.getCustomCards(sendValue);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        var cards = JSON.parse(result);
+        res.json({"result": "success", "cards": cards});
     }
 }
 
 //create custom card
 async function addCustomCard(req, res) {
     var post = req.body;
-    var sendValue = [post.category_id, post.name, post.img_path, 0]; //send category id, card name, card image path and is custom(0)
+    // upload image in storage
+    cardModel.uploadFile(post.name, post.img_path, post.user_id);
+    
+    const img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + post.name +".png"
+    var sendValue = [post.category_id, post.name, img_path, 0]; //send category id, card name, card image path and is custom(0)
 
-    //add in card tabel
+    // add in card table
     var card_id = await cardModel.insertCard(sendValue);
+
     if(!card_id)
         res.json({"result": "fail"});
     //add in card_custom_info table
     else {
         sendValue = [post.user_id, card_id];
+        console.log(sendValue);
         var card_custom_id = await cardModel.insertCustomCard(sendValue);
         if(!card_custom_id)
             res.json({"result": "fail"});
         else {
             res.json({"result": "success", "card_id": card_id, "custom_card_id" : card_custom_id, "card_name" : post.name, "card_img_path" : post.img_path});
         }
-    }
+    }   
 }
 
 module.exports = {
     getCard,
+    getBuiltInCard,
+    getCustomCard,
     addCustomCard
 }
