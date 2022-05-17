@@ -125,7 +125,7 @@ async function uploadFile(name, contents, user_id) {
     
         passthroughStream.pipe(file.createWriteStream({
             metadata: {
-                contentType: 'image/jpeg',
+                contentType: 'image/png',
                 metadata: {
                   custom: 'metadata'
                 }
