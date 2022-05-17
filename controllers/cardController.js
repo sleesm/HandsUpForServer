@@ -43,9 +43,9 @@ async function getCustomCard(req,res){
 async function addCustomCard(req, res) {
     var post = req.body;
     // upload image in storage
-    cardModel.uploadFile(post.name, post.img_path, post.user_id);
+    const curTime = cardModel.uploadFile(post.name, post.img_path, post.user_id);
     
-    const img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + post.name +".png"
+    const img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png"
     var sendValue = [post.category_id, post.name, img_path, 0]; //send category id, card name, card image path and is custom(0)
 
     // add in card table

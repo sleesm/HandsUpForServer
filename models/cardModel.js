@@ -108,9 +108,10 @@ async function insertCustomCard(sendValue) {
 }
 
 async function uploadFile(name, contents, user_id) {
+    const curTime = getTime();
     const storage = new Storage();
     const bucketName = 'huco-bucket';
-    const filePath = 'cardImage/' + user_id + "/"
+    const filePath = 'cardImage/' + user_id + "/" + curTime + "_"
     const destFileName = filePath + name + ".png";
 
     const myBucket = storage.bucket(bucketName);
@@ -118,6 +119,7 @@ async function uploadFile(name, contents, user_id) {
     try {
         const file = myBucket.file(destFileName);
         await storage.bucket(bucketName).file(destFileName).save(contents);
+        return curTime;
         // Create a pass through stream from a string
         // const passthroughStream = new stream.PassThrough();
         // passthroughStream.write(contents);
@@ -131,8 +133,19 @@ async function uploadFile(name, contents, user_id) {
     } catch (error) {
         console.log(error);
     }
-  }
-  
+}
+
+function getTime(){
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1; 
+    let date = today.getDate(); 
+
+    let hours = today.getHours(); 
+    let minutes = today.getMinutes();  
+
+    return year.toString() + month.toString() + date.toString() + "_" + hours + ":" + minutes
+}
 
 module.exports = {
     getCards,
