@@ -11,6 +11,30 @@ async function getBuiltInCategory(req, res) {
     }
 }
 
+async function getCustomCategory(req,res){
+    var post = req.body;
+    //get all custom category using user_id
+    var customResult = await categoryModel.getCustomCategoryInfo(post.user_id);
+    if(!customResult)
+        res.json({"result": "fail"});
+    else{
+        customResult = JSON.parse(customResult);
+        for (var cate of customResult) {
+            //get specific category info using category_id
+            var result = await categoryModel.getSpecificCateogy(cate.category_id);
+            if(!result)
+                res.json({"result": "fail"});
+            else{
+                result = JSON.parse(result);
+                cate.category_name = result.category_name;
+                cate.category_is_built_in = result.category_is_built_in;
+            }
+        }
+        var categories = customResult;
+        res.json({"result": "success", "categories": categories});
+    }
+}
+
 //create custom category
 async function addCustomCategory(req, res) {
     var post = req.body;
@@ -20,10 +44,10 @@ async function addCustomCategory(req, res) {
     var category_id = await categoryModel.insertCategory(sendValue);
     if(!category_id)
         res.json({"result": "fail"});
-    //add in category_custom_info table
-    else {
+    else {//add in category_custom_info table
         sendValue = [post.user_id, category_id, 0, post.access];
         var category_custom_id = await categoryModel.insertCustomCategory(sendValue);
+        console.log(category_custom_id)
         if(!category_custom_id)
             res.json({"result": "fail"});
         else {
@@ -35,5 +59,6 @@ async function addCustomCategory(req, res) {
 
 module.exports = {
     getBuiltInCategory,
+    getCustomCategory,
     addCustomCategory
 }

@@ -1,7 +1,9 @@
 const pool = require('../modules/pool');
+const {Storage} = require('@google-cloud/storage');
+// const stream = require('stream');
 
-async function getBuiltInCard(category_id) {
-    const query = `SELECT * FROM card WHERE category_id = ?`;
+async function getCards(category_id) {
+    const query = `SELECT * FROM card WHERE card.category_id=? AND (card.card_is_built_in=true OR (SELECT card_custom_info.card_id FROM card_custom_info WHERE card_custom_info.user_id=? AND card_custom_info.card_id=card.card_id));`;
     try {
         const result = await pool.queryParam(query, category_id).catch(
             function (error) {
@@ -13,9 +15,60 @@ async function getBuiltInCard(category_id) {
         for (ca of result) {
             var card = {};
             card.card_id = ca.card_id;
-            card.custom_card_id = null;
             card.card_name = ca.card_name;
             card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
+            cardInfo.push(card);
+        }
+        cardInfo = JSON.stringify(cardInfo);
+        return cardInfo;
+    } catch(error) {
+        return false;
+    }
+}
+
+async function getBuiltInCards(category_id) {
+    const query = `SELECT * FROM card WHERE category_id = ? AND card_is_built_in = true`;
+    try {
+        const result = await pool.queryParam(query, category_id).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        var cardInfo = [];
+        //get id and name
+        for (ca of result) {
+            var card = {};
+            card.card_id = ca.card_id;
+            card.card_name = ca.card_name;
+            card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
+            cardInfo.push(card);
+        }
+        cardInfo = JSON.stringify(cardInfo);
+        return cardInfo;
+    } catch(error) {
+        return false;
+    }
+}
+
+async function getCustomCards(sendValue) { // category_id, user_id
+    const query = `SELECT card.card_id, category_id, card_name, card_img_path, card_is_built_in, card_custom_info_id, user_id FROM card INNER JOIN card_custom_info ON card.card_id = card_custom_info.card_id WHERE category_id = ? AND user_id = ? AND card_is_built_in = false`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        var cardInfo = [];
+        //get id and name
+        for (ca of result) {
+            var card = {};
+            card.category_id =  ca.category_id;
+            card.card_id = ca.card_id;
+            card.card_name = ca.card_name;
+            card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
             cardInfo.push(card);
         }
         cardInfo = JSON.stringify(cardInfo);
@@ -47,14 +100,58 @@ async function insertCustomCard(sendValue) {
             function (error) {
                 return null;
             });
+        console.log(result.insertId);
         return result.insertId;
     } catch(error) {
         return null;
     }
 }
 
+async function uploadFile(name, contents, user_id) {
+    const curTime = getTime();
+    const storage = new Storage();
+    const bucketName = 'huco-bucket';
+    const filePath = 'cardImage/' + user_id + "/" + curTime + "_"
+    const destFileName = filePath + name + ".png";
+
+    const myBucket = storage.bucket(bucketName);
+    
+    try {
+        const file = myBucket.file(destFileName);
+        await storage.bucket(bucketName).file(destFileName).save(contents);
+        return curTime;
+        // Create a pass through stream from a string
+        // const passthroughStream = new stream.PassThrough();
+        // passthroughStream.write(contents);
+        // passthroughStream.end();
+    
+        // passthroughStream.pipe(file.createWriteStream()).on('finish', () => {
+        //     // The file upload is complete
+        // });
+
+        // console.log(`${destFileName} uploaded to ${bucketName}`);        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function getTime(){
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1; 
+    let date = today.getDate(); 
+
+    let hours = today.getHours(); 
+    let minutes = today.getMinutes();  
+
+    return year.toString() + month.toString() + date.toString() + "_" + hours + ":" + minutes
+}
+
 module.exports = {
-    getBuiltInCard,
+    getCards,
+    getBuiltInCards,
+    getCustomCards,
     insertCard,
-    insertCustomCard
+    insertCustomCard,
+    uploadFile
 }
