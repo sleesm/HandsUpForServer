@@ -43,27 +43,33 @@ async function getCustomCard(req,res){
 async function addCustomCard(req, res) {
     var post = req.body;
     // upload image in storage
-    const curTime = cardModel.uploadFile(post.name, post.img_path, post.user_id);
+    const curTime = await cardModel.uploadFile(post.name, post.img_path, post.user_id);
     
-    const img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png"
-    var sendValue = [post.category_id, post.name, img_path, 0]; //send category id, card name, card image path and is custom(0)
-
-    // add in card table
-    var card_id = await cardModel.insertCard(sendValue);
-
-    if(!card_id)
+    console.log(curTime);
+    if(!curTime)
         res.json({"result": "fail"});
-    //add in card_custom_info table
-    else {
-        sendValue = [post.user_id, card_id];
-        console.log(sendValue);
-        var card_custom_id = await cardModel.insertCustomCard(sendValue);
-        if(!card_custom_id)
+    else{
+        const img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png"
+        var sendValue = [post.category_id, post.name, img_path, 0]; //send category id, card name, card image path and is custom(0)
+
+        // add in card table
+        var card_id = await cardModel.insertCard(sendValue);
+
+        if(!card_id)
             res.json({"result": "fail"});
+        //add in card_custom_info table
         else {
-            res.json({"result": "success", "card_id": card_id, "card_name" : post.name, "card_img_path" : post.img_path});
-        }
-    }   
+            sendValue = [post.user_id, card_id];
+            console.log(sendValue);
+            var card_custom_id = await cardModel.insertCustomCard(sendValue);
+            if(!card_custom_id)
+                res.json({"result": "fail"});
+            else {
+                res.json({"result": "success", "card_id": card_id, "card_name" : post.name, "card_img_path" : post.img_path});
+            }
+        }  
+    }
+ 
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 const pool = require('../modules/pool');
 const {Storage} = require('@google-cloud/storage');
-// const stream = require('stream');
+const stream = require('stream');
 
 async function getCards(category_id) {
     const query = `SELECT * FROM card WHERE card.category_id=? AND (card.card_is_built_in=true OR (SELECT card_custom_info.card_id FROM card_custom_info WHERE card_custom_info.user_id=? AND card_custom_info.card_id=card.card_id));`;
@@ -118,18 +118,21 @@ async function uploadFile(name, contents, user_id) {
     
     try {
         const file = myBucket.file(destFileName);
-        await storage.bucket(bucketName).file(destFileName).save(contents);
-        return curTime;
         // Create a pass through stream from a string
-        // const passthroughStream = new stream.PassThrough();
-        // passthroughStream.write(contents);
-        // passthroughStream.end();
+        const passthroughStream = new stream.PassThrough();
+        passthroughStream.write(Buffer.from(contents, 'base64'));
+        passthroughStream.end();
     
-        // passthroughStream.pipe(file.createWriteStream()).on('finish', () => {
-        //     // The file upload is complete
-        // });
-
-        // console.log(`${destFileName} uploaded to ${bucketName}`);        
+        passthroughStream.pipe(file.createWriteStream({
+            metadata: {
+                contentType: 'image/png',
+                metadata: {
+                  custom: 'metadata'
+                }
+              }
+        })).on('finish', () => {});
+        
+        return curTime;  
     } catch (error) {
         console.log(error);
     }
