@@ -42,7 +42,7 @@ async function getCustomCategory(req,res){
 //get public access category
 async function getPublicCategory(req,res){
     var post = req.body;
-    var result = await categoryModel.getAllPulicCategory(post.user_id);
+    var result = await categoryModel.getAllPublicCategory(post.user_id);
     if(!result)
         res.json({"result": "fail"});
     else {
