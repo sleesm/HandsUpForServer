@@ -57,8 +57,26 @@ async function addCustomCategory(req, res) {
     }
 }
 
+// edit category- name, access
+async function editCategory(req, res) {
+    var post = req.body;
+    var sendValue = [post.name, post.access, post.category_id];
+
+    //update category and category_custom_info table
+    var result = await categoryModel.editCategory(sendValue);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        if(result.affectedRows != 2)
+            res.json({"result": "fail"});
+        else
+            res.json({"result": "success", "category_id" : post.category_id});
+    }
+}
+
 module.exports = {
     getBuiltInCategory,
     getCustomCategory,
-    addCustomCategory
+    addCustomCategory,
+    editCategory
 }

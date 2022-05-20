@@ -115,7 +115,19 @@ async function insertCustomCategory(sendValue) {
     }
 }
 
-
+//edit custom category
+async function editCategory(sendValue) {
+    const query = `UPDATE category, category_custom_info SET category_name=?, category_access=? WHERE category.category_id=?`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                return null;
+            });
+        return result;
+    } catch(error) {
+        return null;
+    }
+}
 
 module.exports = {
     getBuiltInCategory,
@@ -123,5 +135,6 @@ module.exports = {
     getSpecificCateogy,
     checkCategoryisBuiltIn,
     insertCategory,
-    insertCustomCategory
+    insertCustomCategory,
+    editCategory
 }
