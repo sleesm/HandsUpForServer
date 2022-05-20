@@ -1,5 +1,21 @@
 const categoryModel = require("../models/categoryModel");
 
+async function getAllCategory(req, res){
+    var post = req.body;
+    var builtinResult = await categoryModel.getBuiltInCategory();
+    var customResult = await categoryModel.getCustomCategoryInfo(post.user_id);
+    if (!builtinResult || !customResult)
+        res.json({"result": "fail"});
+    else {
+        var categories = JSON.parse(builtinResult);
+        var customCategories = JSON.parse(customResult);
+        for(cate of customCategories){
+            categories.push(cate);
+        }
+        res.json({"result": "success", "categories": categories});
+    }
+}
+
 //get built-in categories in JSON format
 async function getBuiltInCategory(req, res) {
     var result = await categoryModel.getBuiltInCategory();
@@ -11,26 +27,26 @@ async function getBuiltInCategory(req, res) {
     }
 }
 
+//get all custom category using user_id
 async function getCustomCategory(req,res){
     var post = req.body;
-    //get all custom category using user_id
     var customResult = await categoryModel.getCustomCategoryInfo(post.user_id);
     if(!customResult)
         res.json({"result": "fail"});
-    else{
-        customResult = JSON.parse(customResult);
-        for (var cate of customResult) {
-            //get specific category info using category_id
-            var result = await categoryModel.getSpecificCateogy(cate.category_id);
-            if(!result)
-                res.json({"result": "fail"});
-            else{
-                result = JSON.parse(result);
-                cate.category_name = result.category_name;
-                cate.category_is_built_in = result.category_is_built_in;
-            }
-        }
-        var categories = customResult;
+    else {
+        var categories = JSON.parse(customResult);
+        res.json({"result": "success", "categories": categories});
+    }
+}
+
+//get public access category
+async function getPublicCategory(req,res){
+    var post = req.body;
+    var result = await categoryModel.getAllPublicCategory(post.user_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        var categories = JSON.parse(result);
         res.json({"result": "success", "categories": categories});
     }
 }
@@ -58,7 +74,9 @@ async function addCustomCategory(req, res) {
 }
 
 module.exports = {
+    getAllCategory,
     getBuiltInCategory,
     getCustomCategory,
+    getPublicCategory,
     addCustomCategory
 }
