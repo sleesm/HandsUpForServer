@@ -1,5 +1,21 @@
 const categoryModel = require("../models/categoryModel");
 
+async function getAllCategory(req, res){
+    var post = req.body;
+    var builtinResult = await categoryModel.getBuiltInCategory();
+    var customResult = await categoryModel.getCustomCategoryInfo(post.user_id);
+    if (!builtinResult || !customResult)
+        res.json({"result": "fail"});
+    else {
+        var categories = JSON.parse(builtinResult);
+        var customCategories = JSON.parse(customResult);
+        for(cate of customCategories){
+            categories.push(cate);
+        }
+        res.json({"result": "success", "categories": categories});
+    }
+}
+
 //get built-in categories in JSON format
 async function getBuiltInCategory(req, res) {
     var result = await categoryModel.getBuiltInCategory();
@@ -58,6 +74,7 @@ async function addCustomCategory(req, res) {
 }
 
 module.exports = {
+    getAllCategory,
     getBuiltInCategory,
     getCustomCategory,
     getPublicCategory,

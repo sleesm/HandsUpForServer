@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 var categoryController = require('../controllers/categoryController');
 
-//get built-in categories
-router.get('/',categoryController.getBuiltInCategory);
+//get all categories
+router.post('/',categoryController.getAllCategory);
+
+//get all categories
+router.get('/built-in',categoryController.getBuiltInCategory);
 
 //get custom categories
 router.post('/custom',categoryController.getCustomCategory);
