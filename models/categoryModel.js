@@ -1,6 +1,6 @@
 const pool = require('../modules/pool');
 
-//get category_id and category_name from built-in categories
+// get category_id and category_name from built-in categories
 async function getBuiltInCategory() {
     const query = `SELECT * FROM category WHERE category_is_built_in=1`;
     try {
@@ -24,8 +24,9 @@ async function getBuiltInCategory() {
     }
 }
 
+// get custom category
 async function getCustomCategoryInfo(user_id){
-    const query = `SELECT * FROM category_custom_info WHERE user_id = ?`;
+    const query = `select category.category_id, category_name, category_is_built_in, user_id, category_access, category_custom_info_id from category join (select * from category_custom_info where user_id = ?) as info where category.category_id = info.category_id;`;
     try {
         const result = await pool.queryParam(query, user_id).catch(
             function (error) {
@@ -35,12 +36,14 @@ async function getCustomCategoryInfo(user_id){
         var customCategoryInfo = [];
         //get id and name
         for (cate of result) {
-            var customCategory = {};
-            customCategory.category_custom_id = cate.category_custom_info_id;
-            customCategory.category_id = cate.category_id;
-            customCategory.category_access = cate.category_access;
-            customCategory.user_id = cate.user_id;
-            customCategoryInfo.push(customCategory);
+            var category = {};
+            category.category_custom_id = cate.category_custom_info_id;
+            category.category_id = cate.category_id;
+            category.category_access = cate.category_access;
+            category.user_id = cate.user_id;
+            category.category_name = cate.category_name;
+            category.category_is_built_in = cate.category_is_built_in
+            customCategoryInfo.push(category);
         }
         customCategoryInfo = JSON.stringify(customCategoryInfo);
         return customCategoryInfo;
@@ -49,40 +52,31 @@ async function getCustomCategoryInfo(user_id){
     }
 }
 
-async function getSpecificCateogy(category_id){
-    const query = `SELECT * FROM category WHERE category_id = ?`;
+// get public access category
+async function getAllPulicCategory(user_id){
+    const query = `SELECT category.category_id, category_name, category_is_built_in, user_id, category_access, category_custom_info_id FROM category JOIN (SELECT * FROM category_custom_info where category_access = 1 and user_id != ?) as info where category.category_id = info.category_id`;
     try {
-        const result = await pool.queryParam(query, category_id).catch(
-            function (error) {
-                console.log(error);
-                return null;
-        });
-        var category = {};
-        for (cate of result) {
-            category.category_id = cate.category_id;
-            category.category_name = cate.category_name;
-        }
-        category = JSON.stringify(category);
-        return category;
-    } catch(error) {
-        return false;
-    }
-}
-
-async function checkCategoryisBuiltIn(category_id) {
-    const query = `SELECT category_is_built_in FROM category WHERE category_id = ?`;
-    try {
-        const result = await pool.queryParam(query, category_id).catch(
+        const result = await pool.queryParam(query, user_id).catch(
             function (error) {
                 console.log(error);
                 return null;
             });
-        if(result[0].category_is_built_in == 1)
-            return true;
-        else
-            return false;
+        var publicCategories = [];
+        //get id and name
+        for (cate of result) {
+            var category = {};
+            category.category_custom_id = cate.category_custom_info_id;
+            category.category_id = cate.category_id;
+            category.category_access = cate.category_access;
+            category.user_id = cate.user_id;
+            category.category_name = cate.category_name;
+            category.category_is_built_in = cate.category_is_built_in
+            publicCategories.push(category);
+        }
+        publicCategories = JSON.stringify(publicCategories);
+        return publicCategories;
     } catch(error) {
-        return false;
+        return null;
     }
 }
 
@@ -120,8 +114,7 @@ async function insertCustomCategory(sendValue) {
 module.exports = {
     getBuiltInCategory,
     getCustomCategoryInfo,
-    getSpecificCateogy,
-    checkCategoryisBuiltIn,
+    getAllPulicCategory,
     insertCategory,
     insertCustomCategory
 }
