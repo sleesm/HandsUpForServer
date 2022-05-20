@@ -15,6 +15,10 @@ async function getBuiltInCategory() {
             var category = {};
             category.category_id = cate.category_id;
             category.category_name = cate.category_name;
+            category.category_is_built_in = cate.category_is_built_in
+            category.category_custom_id = -1;
+            category.category_access = 0;
+            category.user_id = -1;
             categoryInfo.push(category);
         }
         categoryInfo = JSON.stringify(categoryInfo);
@@ -37,12 +41,12 @@ async function getCustomCategoryInfo(user_id){
         //get id and name
         for (cate of result) {
             var category = {};
-            category.category_custom_id = cate.category_custom_info_id;
             category.category_id = cate.category_id;
-            category.category_access = cate.category_access;
-            category.user_id = cate.user_id;
             category.category_name = cate.category_name;
-            category.category_is_built_in = cate.category_is_built_in
+            category.category_is_built_in = cate.category_is_built_in;
+            category.category_access = cate.category_access;
+            category.category_custom_id = cate.category_custom_info_id;
+            category.user_id = cate.user_id;
             customCategoryInfo.push(category);
         }
         customCategoryInfo = JSON.stringify(customCategoryInfo);
