@@ -80,10 +80,11 @@ async function editCategory(req, res) {
 
     //update category and category_custom_info table
     var result = await categoryModel.editCategory(sendValue);
+    console.log(result);
     if(!result)
         res.json({"result": "fail"});
     else {
-        if(result.affectedRows != 2)
+        if(result.affectedRows == 0)
             res.json({"result": "fail"});
         else
             res.json({"result": "success", "category_id" : post.category_id});
