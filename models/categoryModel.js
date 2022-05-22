@@ -114,7 +114,7 @@ async function insertCustomCategory(sendValue) {
 }
 
 //edit custom category
-async function editCategory(sendValue) {
+async function updateCategory(sendValue) {
     const query = `UPDATE category, category_custom_info SET category_name=?, category_access=? WHERE category.category_id=? AND category_custom_info.category_id=category.category_id`;
     try {
         const result = await pool.queryParam(query, sendValue).catch(
@@ -133,5 +133,5 @@ module.exports = {
     getAllPublicCategory,
     insertCategory,
     insertCustomCategory,
-    editCategory
+    updateCategory
 }

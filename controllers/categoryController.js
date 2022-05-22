@@ -74,12 +74,12 @@ async function addCustomCategory(req, res) {
 }
 
 // edit category- name, access
-async function editCategory(req, res) {
+async function updateCategory(req, res) {
     var post = req.body;
     var sendValue = [post.name, post.access, post.category_id];
 
     //update category and category_custom_info table
-    var result = await categoryModel.editCategory(sendValue);
+    var result = await categoryModel.updateCategory(sendValue);
     console.log(result);
     if(!result)
         res.json({"result": "fail"});
@@ -97,5 +97,5 @@ module.exports = {
     getCustomCategory,
     getPublicCategory,
     addCustomCategory,
-    editCategory
+    updateCategory
 }

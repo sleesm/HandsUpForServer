@@ -18,6 +18,6 @@ router.post('/custom/public',categoryController.getPublicCategory);
 router.post('/create', categoryController.addCustomCategory);
 
 //edit category
-router.post('/update', categoryController.editCategory);
+router.post('/update', categoryController.updateCategory);
 
 module.exports = router;
