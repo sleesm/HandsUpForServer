@@ -30,7 +30,18 @@ async function getBuiltInCard(req, res) {
 async function getCustomCard(req,res){
     var post = req.body;
     var sendValue = [post.category_id, post.user_id];
-    var result = await cardModel.getCustomCards(sendValue);
+    var result = await cardModel.getCustomCardsUsingUserId(sendValue);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        var cards = JSON.parse(result);
+        res.json({"result": "success", "cards": cards});
+    }
+}
+
+async function getPublicCustomCard(req,res){
+    var post = req.body;
+    var result = await cardModel.getCustomCards(post.category_id);
     if(!result)
         res.json({"result": "fail"});
     else {
@@ -76,5 +87,6 @@ module.exports = {
     getCard,
     getBuiltInCard,
     getCustomCard,
+    getPublicCustomCard,
     addCustomCard
 }

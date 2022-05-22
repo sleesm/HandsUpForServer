@@ -11,6 +11,9 @@ router.post('/built-in', cardController.getBuiltInCard);
 //get custom cards
 router.post('/custom', cardController.getCustomCard);
 
+// get public custom cards
+router.post('/custom/public',cardController.getPublicCustomCard);
+
 //create custom card
 router.post('/create', cardController.addCustomCard);
 
