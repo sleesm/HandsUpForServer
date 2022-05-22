@@ -52,10 +52,36 @@ async function getBuiltInCards(category_id) {
     }
 }
 
-async function getCustomCards(sendValue) { // category_id, user_id
+async function getCustomCardsUsingUserId(sendValue) { // category_id, user_id
     const query = `SELECT card.card_id, category_id, card_name, card_img_path, card_is_built_in, card_custom_info_id, user_id FROM card INNER JOIN card_custom_info ON card.card_id = card_custom_info.card_id WHERE category_id = ? AND user_id = ? AND card_is_built_in = false`;
     try {
         const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        var cardInfo = [];
+        //get id and name
+        for (ca of result) {
+            var card = {};
+            card.category_id =  ca.category_id;
+            card.card_id = ca.card_id;
+            card.card_name = ca.card_name;
+            card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
+            cardInfo.push(card);
+        }
+        cardInfo = JSON.stringify(cardInfo);
+        return cardInfo;
+    } catch(error) {
+        return false;
+    }
+}
+
+async function getCustomCards(category_id) { // category_id, user_id
+    const query = `SELECT card.card_id, category_id, card_name, card_img_path, card_is_built_in, card_custom_info_id, user_id FROM card INNER JOIN card_custom_info ON card.card_id = card_custom_info.card_id WHERE category_id = ? AND card_is_built_in = false`;
+    try {
+        const result = await pool.queryParam(query, category_id).catch(
             function (error) {
                 console.log(error);
                 return null;
@@ -153,6 +179,7 @@ function getTime(){
 module.exports = {
     getCards,
     getBuiltInCards,
+    getCustomCardsUsingUserId,
     getCustomCards,
     insertCard,
     insertCustomCard,
