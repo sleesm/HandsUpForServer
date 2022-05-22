@@ -17,4 +17,7 @@ router.post('/custom/public',categoryController.getPublicCategory);
 //create custom category
 router.post('/create', categoryController.addCustomCategory);
 
+//edit category
+router.post('/update', categoryController.updateCategory);
+
 module.exports = router;
