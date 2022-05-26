@@ -83,10 +83,50 @@ async function addCustomCard(req, res) {
  
 }
 
+// edit card - name, image path, category id
+async function updateCard(req, res) {
+    var post = req.body;
+    var isImgNull = false;
+    var curTime = '';
+    var img_path = '';
+    var sendValue = [];
+
+    //if img_path is null, change name and category only
+    if(!post.img_path){
+        console.log("null");
+        isImgNull = true;
+        sendValue = [post.name, post.category_id, post.card_id];
+    }
+    //is img_path exist, upload image
+    else{
+        console.log("not null");
+        curTime = await cardModel.uploadFile(post.name, post.img_path, post.user_id);
+        img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png";
+        sendValue = [post.name, img_path, post.category_id, post.card_id];
+    }
+
+    if(!curTime && !isImgNull)
+        res.json({"result": "fail"});
+    else{
+        //update card and card_custom_info table
+        var result = await cardModel.updateCard(sendValue, isImgNull);
+        console.log(result);
+        if(!result)
+            res.json({"result": "fail"});
+        else {
+            if(result.affectedRows == 0)
+                res.json({"result": "fail"});
+            else
+                res.json({"result": "success", "card_id" : post.card_id});
+        }
+    }
+}
+
 module.exports = {
     getCard,
     getBuiltInCard,
     getCustomCard,
     getPublicCustomCard,
-    addCustomCard
+    addCustomCard,
+    updateCard
 }

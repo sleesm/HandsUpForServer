@@ -17,4 +17,7 @@ router.post('/custom/public',cardController.getPublicCustomCard);
 //create custom card
 router.post('/create', cardController.addCustomCard);
 
+//edit card
+router.post('/update', cardController.updateCard);
+
 module.exports = router;
