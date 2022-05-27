@@ -126,7 +126,6 @@ async function insertCustomCard(sendValue) {
             function (error) {
                 return null;
             });
-        console.log(result.insertId);
         return result.insertId;
     } catch(error) {
         return null;
