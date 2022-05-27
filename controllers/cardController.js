@@ -113,12 +113,8 @@ async function updateCard(req, res) {
         console.log(result);
         if(!result)
             res.json({"result": "fail"});
-        else {
-            if(result.affectedRows == 0)
-                res.json({"result": "fail"});
-            else
-                res.json({"result": "success", "card_id" : post.card_id});
-        }
+        else
+            res.json({"result": "success", "card_id" : post.card_id});
     }
 }
 

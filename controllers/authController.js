@@ -43,12 +43,8 @@ async function updateUserInfo(req, res) {
     var result = await userModel.updateUserInfoById(newUserInfo);
     if(!result)
         res.json({"result": "fail"});
-    else {
-        if(result.affectedRows != 1)
-            res.json({"result": "fail"});
-        else
-            res.json({"result": "success"});
-    }
+    else
+        res.json({"result": "success"});
 }
 
 //for delete user, check email and password
@@ -78,12 +74,8 @@ async function deleteUser(req, res) {
         var result = await userModel.deleteUserById(correctResult);
         if(!result)
             res.json({"result": "fail"});
-        else {
-            if(result.affectedRows != 1)
-                res.json({"result": "fail"});
-            else
-                res.json({"result": "success"});
-        }
+        else
+            res.json({"result": "success"});
     }
 }
 
