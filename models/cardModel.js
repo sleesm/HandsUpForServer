@@ -133,6 +133,25 @@ async function insertCustomCard(sendValue) {
     }
 }
 
+// edit card
+async function updateCard(sendValue, isImgNull) {
+    var query = ``;
+    if(isImgNull)
+        query = `UPDATE card SET card_name=?, category_id=? WHERE card_id=?`;
+    else
+        query = `UPDATE card SET card_name=?, card_img_path=?, category_id=? WHERE card_id=?`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        return result;
+    } catch(error) {
+        return null;
+    }
+}
+
 async function uploadFile(name, contents, user_id) {
     const curTime = getTime();
     const storage = new Storage();
@@ -183,5 +202,6 @@ module.exports = {
     getCustomCards,
     insertCard,
     insertCustomCard,
+    updateCard,
     uploadFile
 }
