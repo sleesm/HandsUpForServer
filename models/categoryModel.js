@@ -113,6 +113,20 @@ async function insertCustomCategory(sendValue) {
     }
 }
 
+async function insertSharedCategory(sendValue) {
+    const query = `INSERT INTO shared_category_user_info (category_custom_info_id, user_id) VALUES (?, ?)`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        return result.insertId;
+    } catch(error) {
+        return null;
+    }
+}
+
 //edit custom category
 async function updateCategory(sendValue) {
     const query = `UPDATE category, category_custom_info SET category_name=?, category_access=? WHERE category.category_id=? AND category_custom_info.category_id=category.category_id`;
@@ -133,5 +147,6 @@ module.exports = {
     getAllPublicCategory,
     insertCategory,
     insertCustomCategory,
+    insertSharedCategory,
     updateCategory
 }
