@@ -165,20 +165,6 @@ async function deleteCard(card_id) {
     }
 }
 
-// delete at card_custom_info table
-async function deleteCustomCard(card_id) {
-    const query = `DELETE FROM card_custom_info WHERE card_id=?`;
-    try {
-        const result = await pool.queryParam(query, card_id).catch(
-            function (error) {
-                return null;
-            });
-        return result;
-    } catch(error) {
-        return null;
-    }
-}
-
 async function uploadFile(name, contents, user_id) {
     const curTime = getTime();
     const storage = new Storage();
@@ -231,6 +217,5 @@ module.exports = {
     insertCustomCard,
     updateCard,
     deleteCard,
-    deleteCustomCard,
     uploadFile
 }
