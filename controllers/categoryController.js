@@ -91,11 +91,22 @@ async function updateCategory(req, res) {
         res.json({"result": "success", "category_id" : post.category_id});
 }
 
+// delete category
+async function deleteCategory(req, res) {
+    var post = req.body;
+    var result = await categoryModel.deleteCategory(post.category_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else
+        res.json({"result": "success"});
+}
+
 module.exports = {
     getAllCategory,
     getBuiltInCategory,
     getCustomCategory,
     getPublicCategory,
     addCustomCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 }
