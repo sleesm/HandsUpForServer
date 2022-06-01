@@ -21,6 +21,6 @@ router.post('/create', cardController.addCustomCard);
 router.post('/update', cardController.updateCard);
 
 //delete card
-router.delete('/delete', cardController.deleteCard);
+router.post('/delete', cardController.deleteCard);
 
 module.exports = router;
