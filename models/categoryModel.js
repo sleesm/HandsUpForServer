@@ -141,6 +141,20 @@ async function updateCategory(sendValue) {
     }
 }
 
+// delete custom category
+async function deleteCategory(sendValue) {
+    const query = `DELETE FROM category WHERE category_id=?;`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                return null;
+            });
+        return result;
+    } catch(error) {
+        return null;
+    }
+}
+
 module.exports = {
     getBuiltInCategory,
     getCustomCategoryInfo,
@@ -148,5 +162,6 @@ module.exports = {
     insertCategory,
     insertCustomCategory,
     insertSharedCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 }

@@ -20,4 +20,7 @@ router.post('/create', cardController.addCustomCard);
 //edit card
 router.post('/update', cardController.updateCard);
 
+//delete card
+router.post('/delete', cardController.deleteCard);
+
 module.exports = router;

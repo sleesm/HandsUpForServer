@@ -127,11 +127,23 @@ async function updateCard(req, res) {
     }
 }
 
+//delete card
+async function deleteCard(req, res) {
+    var post = req.body;
+    var result = await cardModel.deleteCard(post.card_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else
+        res.json({"result": "success"});
+}
+
+
 module.exports = {
     getCard,
     getBuiltInCard,
     getCustomCard,
     getPublicCustomCard,
     addCustomCard,
-    updateCard
+    updateCard,
+    deleteCard
 }
