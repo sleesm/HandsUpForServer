@@ -68,7 +68,7 @@ async function addCustomCategory(req, res) {
             res.json({"result": "fail"});
         else {
             if(post.is_shared){
-                var sharedValue = [category_custom_id, post.user_id];
+                var sharedValue = [post.category_custom_id, post.user_id];
                 categoryModel.insertSharedCategory(sharedValue);
             }
             res.json({"result": "success", "category_id" : category_id, "category_custom_id": category_custom_id, "category_name" : post.name,
