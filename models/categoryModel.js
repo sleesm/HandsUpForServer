@@ -16,7 +16,7 @@ async function getBuiltInCategory() {
             category.category_id = cate.category_id;
             category.category_name = cate.category_name;
             category.category_is_built_in = cate.category_is_built_in
-            // category.category_custom_id = -1;
+            category.category_custom_id = -1;
             category.category_access = 0;
             category.user_id = -1;
             categoryInfo.push(category);
@@ -45,7 +45,7 @@ async function getCustomCategoryInfo(user_id){
             category.category_name = cate.category_name;
             category.category_is_built_in = cate.category_is_built_in;
             category.category_access = cate.category_access;
-            // category.category_custom_id = cate.category_custom_info_id;
+            category.category_custom_id = cate.category_custom_info_id;
             category.user_id = cate.user_id;
             customCategoryInfo.push(category);
         }
@@ -73,7 +73,7 @@ async function getAllPublicCategory(user_id){
             category.category_name = cate.category_name;
             category.category_is_built_in = cate.category_is_built_in;
             category.category_access = cate.category_access;
-            // category.category_custom_id = cate.category_custom_info_id;
+            category.category_custom_id = cate.category_custom_info_id;
             category.user_id = cate.user_id;
             publicCategories.push(category);
         }
