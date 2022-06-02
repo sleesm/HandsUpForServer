@@ -27,6 +27,31 @@ async function getCards(category_id) {
     }
 }
 
+async function getAllCardUsingUserID(user_id){
+    const query = `SELECT * FROM card WHERE card.card_is_built_in=true OR (SELECT card_custom_info.card_id FROM card_custom_info WHERE card_custom_info.user_id=? AND card_custom_info.card_id=card.card_id);`;
+    try {
+        const result = await pool.queryParam(query, user_id).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        var cardInfo = [];
+        //get id and name
+        for (ca of result) {
+            var card = {};
+            card.card_id = ca.card_id;
+            card.card_name = ca.card_name;
+            card.card_img_path = ca.card_img_path;
+            card.card_is_built_in = ca.card_is_built_in;
+            cardInfo.push(card);
+        }
+        cardInfo = JSON.stringify(cardInfo);
+        return cardInfo;
+    } catch(error) {
+        return false;
+    } 
+}
+
 async function getBuiltInCards(category_id) {
     const query = `SELECT * FROM card WHERE category_id = ? AND card_is_built_in = true`;
     try {
@@ -210,6 +235,7 @@ function getTime(){
 
 module.exports = {
     getCards,
+    getAllCardUsingUserID,
     getBuiltInCards,
     getCustomCardsUsingUserId,
     getCustomCards,

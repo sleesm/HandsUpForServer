@@ -14,6 +14,18 @@ async function getCard(req,res){
     }
 }
 
+//get all category's cards using user_id
+async function getAllCard(req,res){
+    var post = req.body;
+    var result = await cardModel.getAllCardUsingUserID(post.user_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        var cards = JSON.parse(result);
+        res.json({"result": "success", "cards": cards});
+    }
+}
+
 //get built-in cards using category_id
 async function getBuiltInCard(req, res) {
     var post = req.body;
@@ -140,6 +152,7 @@ async function deleteCard(req, res) {
 
 module.exports = {
     getCard,
+    getAllCard,
     getBuiltInCard,
     getCustomCard,
     getPublicCustomCard,
