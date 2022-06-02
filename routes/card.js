@@ -5,6 +5,9 @@ var cardController = require('../controllers/cardController');
 //get all cards
 router.post('/', cardController.getCard);
 
+//get all category's cards
+router.post('/all', cardController.getAllCard)
+
 //get built-in cards
 router.post('/built-in', cardController.getBuiltInCard);
 
