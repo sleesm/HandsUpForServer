@@ -139,9 +139,35 @@ async function updateCard(req, res) {
     }
 }
 
+async function checkCategoryIsShared(req, res) {
+    var post = req.body;
+    var result = await cardModel.checkCategoryIsShared(post.card_id);
+    if(!result)
+        res.json({"result": "fail"});
+    else {
+        if(result != 0)
+            deleteImage(req, res);
+        //else
+            //deleteCard(req, res);
+    }
+}
+
+async function deleteImage(req, res) {
+    var post = req.body;
+    var img_path = post.img_path;
+    var path = img_path.split('/huco-bucket/');
+    console.log(path[1]);
+    var result = await cardModel.deleteImage(path[1]);
+    if(result)
+        res.json({"result": "success"});
+    else
+        res.json({"result": "fail"});
+}
+
 //delete card
 async function deleteCard(req, res) {
     var post = req.body;
+    console.log(post);
     var result = await cardModel.deleteCard(post.card_id);
     if(!result)
         res.json({"result": "fail"});
@@ -158,5 +184,7 @@ module.exports = {
     getPublicCustomCard,
     addCustomCard,
     updateCard,
-    deleteCard
+    checkCategoryIsShared,
+    deleteCard,
+    deleteImage
 }

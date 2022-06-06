@@ -24,6 +24,6 @@ router.post('/create', cardController.addCustomCard);
 router.post('/update', cardController.updateCard);
 
 //delete card
-router.post('/delete', cardController.deleteCard);
+router.post('/delete', cardController.checkCategoryIsShared);
 
 module.exports = router;
