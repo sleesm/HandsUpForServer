@@ -233,6 +233,36 @@ function getTime(){
     return year.toString() + month.toString() + date.toString() + "_" + hours + ":" + minutes
 }
 
+// check category of the card is shared
+async function checkCategoryIsShared(card_id) {
+    const query = `SELECT EXISTS (SELECT * FROM shared_category_user_info WHERE category_custom_info_id = (SELECT category_custom_info_id FROM category_custom_info WHERE category_id = (SELECT category_id FROM card WHERE card_id=?))) as isShared`;
+    try {
+        const result = await pool.queryParam(query, card_id).catch(
+            function (error) {
+                return null;
+            });
+        return result[0].isShared;
+    } catch(error) {
+        return null;
+    }
+}
+
+// delete image from storage
+async function deleteImage(img_path) {
+    const storage = new Storage();
+    const bucketName = 'huco-bucket';
+    const myBucket = storage.bucket(bucketName);
+    
+    try {
+        await myBucket.file(img_path).delete();
+        //console.log(`gs://${myBucket}/${img_path} deleted`);
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 module.exports = {
     getCards,
     getAllCardUsingUserID,
@@ -243,5 +273,7 @@ module.exports = {
     insertCustomCard,
     updateCard,
     deleteCard,
-    uploadFile
+    uploadFile,
+    checkCategoryIsShared,
+    deleteImage
 }
