@@ -113,13 +113,11 @@ async function updateCard(req, res) {
 
     //if img_path is null, change name and category only
     if(!post.img_path){
-        console.log("null");
         isImgNull = true;
         sendValue = [post.name, post.category_id, post.card_id];
     }
     //is img_path exist, upload image
     else{
-        console.log("not null");
         curTime = await cardModel.uploadFile(post.name, post.img_path, post.user_id);
         img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png";
         sendValue = [post.name, img_path, post.category_id, post.card_id];
@@ -130,7 +128,6 @@ async function updateCard(req, res) {
     else{
         //update card and card_custom_info table
         var result = await cardModel.updateCard(sendValue, isImgNull);
-        console.log(result);
         if(!result)
             res.json({"result": "fail"});
         else
@@ -143,7 +140,6 @@ async function checkCardIsShared(req, res) {
     var post = req.body;
     var sendValue = [post.img_path, post.card_id] 
     var result = await cardModel.checkCardIsShared(sendValue);
-    console.log(result[0].cnt);
     if(result == null)
         res.json({"result": "fail"});
     else {
@@ -156,10 +152,8 @@ async function checkCardIsShared(req, res) {
 
 async function deleteImage(req, res) {
     var post = req.body;
-    console.log(post);
     var img_path = post.img_path;
     var path = img_path.split('/huco-bucket/');
-    console.log(path[1]);
     var result = await cardModel.deleteImage(path[1]);
     if(result)
         deleteCard(req, res);
@@ -170,7 +164,6 @@ async function deleteImage(req, res) {
 //delete card
 async function deleteCard(req, res) {
     var post = req.body;
-    console.log(post);
     var result = await cardModel.deleteCard(post.card_id);
     if(!result)
         res.json({"result": "fail"});

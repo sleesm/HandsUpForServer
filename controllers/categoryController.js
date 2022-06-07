@@ -64,7 +64,6 @@ async function addCustomCategory(req, res) {
     else {//add in category_custom_info table
         sendValue = [post.user_id, category_id, post.access];
         var category_custom_id = await categoryModel.insertCustomCategory(sendValue);
-        console.log(category_custom_id)
         if(!category_custom_id)
             res.json({"result": "fail"});
         else {
@@ -82,10 +81,8 @@ async function addCustomCategory(req, res) {
 async function updateCategory(req, res) {
     var post = req.body;
     var sendValue = [post.name, post.access, post.category_id];
-    console.log(sendValue);
     //update category and category_custom_info table
     var result = await categoryModel.updateCategory(sendValue);
-    console.log(result);
     if(!result)
         res.json({"result": "fail"});
     else
@@ -99,7 +96,6 @@ async function deleteCategory(req, res) {
     var cardImgList = await cardModel.getCardImgList(post.category_id);
 
     for(sendValue of cardImgList) {
-        console.log(sendValue);
         //check card is shared
         var result = await cardModel.checkCardIsShared(sendValue);
         if(result == null)

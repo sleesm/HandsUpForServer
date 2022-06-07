@@ -277,7 +277,6 @@ async function deleteImage(img_path) {
     
     try {
         await myBucket.file(img_path).delete();
-        console.log(`gs://${myBucket}/${img_path} deleted`);
         return true;
     } catch (error) {
         console.log(error);
