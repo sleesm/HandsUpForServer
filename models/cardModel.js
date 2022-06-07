@@ -235,7 +235,7 @@ function getTime(){
 
 // check category of the card is shared
 async function checkCardIsShared(sendValue) {
-    const query = `select count(card_id) as cnt from huco.card where card_img_path=? and card_id!=?;`;
+    const query = `SELECT count(card_id) AS cnt FROM card WHERE card_img_path=? AND card_id!=?`;
     try {
         const result = await pool.queryParam(query, sendValue).catch(
             function (error) {
