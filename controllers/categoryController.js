@@ -92,7 +92,8 @@ async function updateCategory(req, res) {
         res.json({"result": "success", "category_id" : post.category_id});
 }
 
-async function deleteCardImg(req, res) {
+// delete category
+async function deleteCategory(req, res) {
     var post = req.body;
     //get list of card image path
     var cardImgList = await cardModel.getCardImgList(post.category_id);
@@ -111,14 +112,8 @@ async function deleteCardImg(req, res) {
             }
         }
     }
-    
-    //delete category
-    deleteCategory(req, res);
-}
 
-// delete category
-async function deleteCategory(req, res) {
-    var post = req.body;
+    //delete category
     var result = await categoryModel.deleteCategory(post.category_id);
     if(!result)
         res.json({"result": "fail"});
@@ -133,6 +128,5 @@ module.exports = {
     getPublicCategory,
     addCustomCategory,
     updateCategory,
-    deleteCardImg,
     deleteCategory
 }

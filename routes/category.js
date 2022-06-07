@@ -21,6 +21,6 @@ router.post('/create', categoryController.addCustomCategory);
 router.post('/update', categoryController.updateCategory);
 
 //delete category
-router.post('/delete', categoryController.deleteCardImg);
+router.post('/delete', categoryController.deleteCategory);
 
 module.exports = router;
