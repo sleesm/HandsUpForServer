@@ -1,4 +1,5 @@
 const categoryModel = require("../models/categoryModel");
+const cardModel = require("../models/cardModel");
 
 async function getAllCategory(req, res){
     var post = req.body;
@@ -61,7 +62,7 @@ async function addCustomCategory(req, res) {
     if(!category_id)
         res.json({"result": "fail"});
     else {//add in category_custom_info table
-        sendValue = [post.user_id, category_id, 0, post.access];
+        sendValue = [post.user_id, category_id, post.access];
         var category_custom_id = await categoryModel.insertCustomCategory(sendValue);
         console.log(category_custom_id)
         if(!category_custom_id)
@@ -91,6 +92,30 @@ async function updateCategory(req, res) {
         res.json({"result": "success", "category_id" : post.category_id});
 }
 
+async function deleteCardImg(req, res) {
+    var post = req.body;
+    //get list of card image path
+    var cardImgList = await cardModel.getCardImgList(post.category_id);
+
+    for(sendValue of cardImgList) {
+        console.log(sendValue);
+        //check card is shared
+        var result = await cardModel.checkCardIsShared(sendValue);
+        if(result == null)
+            res.json({"result": "fail"});
+        else {
+            //delete card image
+            if(result[0].cnt == 0){
+                var path = sendValue[0].split('/huco-bucket/');
+                cardModel.deleteImage(path[1]);
+            }
+        }
+    }
+    
+    //delete category
+    deleteCategory(req, res);
+}
+
 // delete category
 async function deleteCategory(req, res) {
     var post = req.body;
@@ -108,5 +133,6 @@ module.exports = {
     getPublicCategory,
     addCustomCategory,
     updateCategory,
+    deleteCardImg,
     deleteCategory
 }
