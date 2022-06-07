@@ -1,5 +1,4 @@
 const cardModel = require("../models/cardModel");
-const categoryModel = require("../models/categoryModel");
 
 //get all cards using category_id and user_id
 async function getCard(req,res){
@@ -139,27 +138,31 @@ async function updateCard(req, res) {
     }
 }
 
-async function checkCategoryIsShared(req, res) {
+//check card is shared by image path
+async function checkCardIsShared(req, res) {
     var post = req.body;
-    var result = await cardModel.checkCategoryIsShared(post.card_id);
-    if(!result)
+    var sendValue = [post.img_path, post.card_id] 
+    var result = await cardModel.checkCardIsShared(sendValue);
+    console.log(result[0].cnt);
+    if(result == null)
         res.json({"result": "fail"});
     else {
-        if(result != 0)
+        if(result[0].cnt == 0)
             deleteImage(req, res);
-        //else
-            //deleteCard(req, res);
+        else
+            deleteCard(req, res);
     }
 }
 
 async function deleteImage(req, res) {
     var post = req.body;
+    console.log(post);
     var img_path = post.img_path;
     var path = img_path.split('/huco-bucket/');
     console.log(path[1]);
     var result = await cardModel.deleteImage(path[1]);
     if(result)
-        res.json({"result": "success"});
+        deleteCard(req, res);
     else
         res.json({"result": "fail"});
 }
@@ -184,7 +187,7 @@ module.exports = {
     getPublicCustomCard,
     addCustomCard,
     updateCard,
-    checkCategoryIsShared,
+    checkCardIsShared,
     deleteCard,
     deleteImage
 }

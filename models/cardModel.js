@@ -234,14 +234,36 @@ function getTime(){
 }
 
 // check category of the card is shared
-async function checkCategoryIsShared(card_id) {
-    const query = `SELECT EXISTS (SELECT * FROM shared_category_user_info WHERE category_custom_info_id = (SELECT category_custom_info_id FROM category_custom_info WHERE category_id = (SELECT category_id FROM card WHERE card_id=?))) as isShared`;
+async function checkCardIsShared(sendValue) {
+    const query = `select count(card_id) as cnt from huco.card where card_img_path=? and card_id!=?;`;
     try {
-        const result = await pool.queryParam(query, card_id).catch(
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        return result;
+    } catch(error) {
+        return null;
+    }
+}
+
+// get list of card image path
+async function getCardImgList(category_id) {
+    const query = `SELECT card_id, card_img_path FROM card WHERE category_id = ?`;
+    try {
+        const result = await pool.queryParam(query, category_id).catch(
             function (error) {
                 return null;
             });
-        return result[0].isShared;
+        var cardImgPath = [];
+        for (ca of result){
+            var cardInfo = [];
+            cardInfo.push(ca.card_img_path);
+            cardInfo.push(ca.card_id);
+            cardImgPath.push(cardInfo);
+        }
+        return cardImgPath;
     } catch(error) {
         return null;
     }
@@ -255,7 +277,7 @@ async function deleteImage(img_path) {
     
     try {
         await myBucket.file(img_path).delete();
-        //console.log(`gs://${myBucket}/${img_path} deleted`);
+        console.log(`gs://${myBucket}/${img_path} deleted`);
         return true;
     } catch (error) {
         console.log(error);
@@ -274,6 +296,7 @@ module.exports = {
     updateCard,
     deleteCard,
     uploadFile,
-    checkCategoryIsShared,
+    checkCardIsShared,
+    getCardImgList,
     deleteImage
 }
