@@ -233,6 +233,57 @@ function getTime(){
     return year.toString() + month.toString() + date.toString() + "_" + hours + ":" + minutes
 }
 
+// check category of the card is shared
+async function checkCardIsShared(sendValue) {
+    const query = `SELECT count(card_id) AS cnt FROM card WHERE card_img_path=? AND card_id!=?`;
+    try {
+        const result = await pool.queryParam(query, sendValue).catch(
+            function (error) {
+                console.log(error);
+                return null;
+            });
+        return result;
+    } catch(error) {
+        return null;
+    }
+}
+
+// get list of card image path
+async function getCardImgList(category_id) {
+    const query = `SELECT card_id, card_img_path FROM card WHERE category_id = ?`;
+    try {
+        const result = await pool.queryParam(query, category_id).catch(
+            function (error) {
+                return null;
+            });
+        var cardImgPath = [];
+        for (ca of result){
+            var cardInfo = [];
+            cardInfo.push(ca.card_img_path);
+            cardInfo.push(ca.card_id);
+            cardImgPath.push(cardInfo);
+        }
+        return cardImgPath;
+    } catch(error) {
+        return null;
+    }
+}
+
+// delete image from storage
+async function deleteImage(img_path) {
+    const storage = new Storage();
+    const bucketName = 'huco-bucket';
+    const myBucket = storage.bucket(bucketName);
+    
+    try {
+        await myBucket.file(img_path).delete();
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 module.exports = {
     getCards,
     getAllCardUsingUserID,
@@ -243,5 +294,8 @@ module.exports = {
     insertCustomCard,
     updateCard,
     deleteCard,
-    uploadFile
+    uploadFile,
+    checkCardIsShared,
+    getCardImgList,
+    deleteImage
 }

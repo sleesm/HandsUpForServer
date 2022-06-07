@@ -1,5 +1,4 @@
 const cardModel = require("../models/cardModel");
-const categoryModel = require("../models/categoryModel");
 
 //get all cards using category_id and user_id
 async function getCard(req,res){
@@ -114,13 +113,11 @@ async function updateCard(req, res) {
 
     //if img_path is null, change name and category only
     if(!post.img_path){
-        console.log("null");
         isImgNull = true;
         sendValue = [post.name, post.category_id, post.card_id];
     }
     //is img_path exist, upload image
     else{
-        console.log("not null");
         curTime = await cardModel.uploadFile(post.name, post.img_path, post.user_id);
         img_path = "https://storage.googleapis.com/huco-bucket/cardImage/" + post.user_id + "/" + curTime + "_" + post.name +".png";
         sendValue = [post.name, img_path, post.category_id, post.card_id];
@@ -131,12 +128,37 @@ async function updateCard(req, res) {
     else{
         //update card and card_custom_info table
         var result = await cardModel.updateCard(sendValue, isImgNull);
-        console.log(result);
         if(!result)
             res.json({"result": "fail"});
         else
             res.json({"result": "success", "card_id" : post.card_id});
     }
+}
+
+//check card is shared by image path
+async function checkCardIsShared(req, res) {
+    var post = req.body;
+    var sendValue = [post.img_path, post.card_id] 
+    var result = await cardModel.checkCardIsShared(sendValue);
+    if(result == null)
+        res.json({"result": "fail"});
+    else {
+        if(result[0].cnt == 0)
+            deleteImage(req, res);
+        else
+            deleteCard(req, res);
+    }
+}
+
+async function deleteImage(req, res) {
+    var post = req.body;
+    var img_path = post.img_path;
+    var path = img_path.split('/huco-bucket/');
+    var result = await cardModel.deleteImage(path[1]);
+    if(result)
+        deleteCard(req, res);
+    else
+        res.json({"result": "fail"});
 }
 
 //delete card
@@ -158,5 +180,7 @@ module.exports = {
     getPublicCustomCard,
     addCustomCard,
     updateCard,
-    deleteCard
+    checkCardIsShared,
+    deleteCard,
+    deleteImage
 }
