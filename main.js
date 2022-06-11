@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var app = express();
 var authRouter = require('./routes/auth');
@@ -27,6 +28,6 @@ app.use(function(err, req, res, next) {
     res.status(500).send('Something broken!')
 });
 
-app.listen(3000, function() {
+app.listen(process.env.PORT, function() {
     console.log('success!!');
 });
