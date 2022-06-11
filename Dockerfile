@@ -24,4 +24,4 @@ ENV ACCESS_KEY '797ce360-8ca1-4a8f-8ab6-bb0ae76a0405'
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "run"]
+CMD ["npm", "start"]
