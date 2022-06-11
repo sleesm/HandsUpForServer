@@ -4,12 +4,22 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.17.3"
+    "@google-cloud/storage": "^5.19.4",
+    "@google-cloud/translate": "^6.3.1",
+    "@google-cloud/vision": "^2.4.2",
+    "axios": "^0.27.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mysql": "^2.18.1",
+    "stream": "0.0.2",
+    "sync-mysql": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
   },
   "scripts": {
+    "run": "node main.js",
+    "start": "nodemon main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
