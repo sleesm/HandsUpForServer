@@ -21,7 +21,7 @@ spec:
         image: project0620/huco:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: 5000
           name: huco
 ---
 apiVersion: v1
@@ -33,7 +33,7 @@ metadata:
 spec:
   ports:
   - port: 80
-    targetPort: 3000
+    targetPort: 5000
   selector:
     app: huco
     tier: huco
