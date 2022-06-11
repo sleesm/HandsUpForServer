@@ -18,6 +18,7 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
+    "run": "node main.js",
     "start": "nodemon main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: huco
+  labels:
+    app: huco
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: huco
+  template:
+    metadata:
+      labels:
+        app: huco
+        tier: huco
+    spec:
+      containers:
+      - name: huco
+        image: project0620/huco:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: huco
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: huco
+  labels:
+    app: huco
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: huco
+    tier: huco
+  type: LoadBalancer
