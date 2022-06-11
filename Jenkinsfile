@@ -22,7 +22,7 @@ pipeline {
         stage("Push image") {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'HUCOGKE') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'HUCODocekrHub') {
                             myapp.push("latest")
                             myapp.push("${env.BUILD_ID}")
                     }
