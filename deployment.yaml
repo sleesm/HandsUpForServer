@@ -20,7 +20,6 @@ spec:
       - name: huco
         image: project0620/huco:latest
         imagePullPolicy: Always
-        command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
         ports:
         - containerPort: 3000
           name: huco
