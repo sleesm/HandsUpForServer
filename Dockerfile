@@ -1,4 +1,4 @@
-FROM bitnami/node:9 as builder
+FROM bitnami/node:12 as builder
 ENV NODE_ENV="production"
 
 # Copy app's source code to the /app directory
@@ -10,7 +10,7 @@ WORKDIR /app
 # Install Node.js dependencies defined in '/app/packages.json'
 RUN npm install
 
-FROM bitnami/node:9-prod
+FROM bitnami/node:12-prod
 ENV NODE_ENV="production"
 COPY --from=builder /app /app
 WORKDIR /app
@@ -24,4 +24,4 @@ ENV ACCESS_KEY '797ce360-8ca1-4a8f-8ab6-bb0ae76a0405'
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "run"]
+CMD ["npm", "start"]

@@ -14,6 +14,10 @@ pipeline {
         }
         stage("Build image") {
             steps {
+                withCredentials([file(credentialsId: 'HUCOGCP', variable: 'HUCOGCP')]) {
+                    sh("gcloud auth activate-service-account --key-file=${HUCOGCP}")
+                    sh("gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone asia-northeast3-a --project ${env.PROJECT_ID}")
+                }
                 script {
                     myapp = docker.build("project0620/huco:${env.BUILD_ID}")
                 }
@@ -22,7 +26,7 @@ pipeline {
         stage("Push image") {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'HUCODocekrHub') {
                             myapp.push("latest")
                             myapp.push("${env.BUILD_ID}")
                     }
