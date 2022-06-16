@@ -34,10 +34,10 @@ pipeline {
 				branch 'main'
 			}
             steps{
-                withCredentials([file(credentialsId: 'HUCOGCP', variable: 'HUCOGCP')]) {
-                    sh("gcloud auth activate-service-account --key-file=${HUCOGCP}")
-                    sh("gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone asia-northeast3-a --project ${env.PROJECT_ID}")
-                }
+                // withCredentials([file(credentialsId: 'HUCOGCP', variable: 'HUCOGCP')]) {
+                //     sh("gcloud auth activate-service-account --key-file=${HUCOGCP}")
+                //     sh("gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone asia-northeast3-a --project ${env.PROJECT_ID}")
+                // }
                 sh "sed -i 's/huco:latest/huco:${env.BUILD_ID}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
