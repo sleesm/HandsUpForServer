@@ -24,15 +24,15 @@ spec:
         - containerPort: 3000
           name: huco
         env:
-            - name: "BUCKET_NAME"
-              value: huco
-            - name: "GOOGLE_APPLICATION_CREDENTIALS"
-              value: "/var/run/secret/cloud.google.com/service-account.json"
-          volumeMounts:
-            - name: "service-account"
-              mountPath: "/var/run/secret/cloud.google.com"
-            - name: "certs"
-              mountPath: "/etc/ssl/certs"
+        - name: "BUCKET_NAME"
+          value: huco
+        - name: "GOOGLE_APPLICATION_CREDENTIALS"
+          value: "/var/run/secret/cloud.google.com/service-account.json"
+        volumeMounts:
+        - name: "service-account"
+          mountPath: "/var/run/secret/cloud.google.com"
+        - name: "certs"
+          mountPath: "/etc/ssl/certs"
       volumes:
         - name: "service-account"
           secret:
