@@ -15,10 +15,6 @@ ENV NODE_ENV="production"
 COPY --from=builder /app /app
 WORKDIR /app
 ENV PORT 3000
-ENV DATABASE_HOST '34.64.221.63'
-ENV DATABASE_NAME 'huco'
-ENV DATABASE_USERNAME 'huco'
-ENV OPEN_API_URL 'http://aiopen.etri.re.kr:8000/WiseWWN/WordRel'
 EXPOSE 3000
 
 # Start the application
