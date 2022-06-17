@@ -28,6 +28,9 @@ spec:
           value: huco
         - name: "GOOGLE_APPLICATION_CREDENTIALS"
           value: "/var/run/secret/cloud.google.com/service-account.json"
+        envFrom:
+        - secretRef:
+            name: backend-secret
         volumeMounts:
         - name: "service-account"
           mountPath: "/var/run/secret/cloud.google.com"
