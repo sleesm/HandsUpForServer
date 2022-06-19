@@ -54,7 +54,7 @@ async function getSimilarityResult(translated, req, res) {
         method: "post",
         url: process.env.OPEN_API_URL,
         timeout: 60000, //optional
-        httpsAgent: new https.Agent({ keepAlive: true }),
+        httpAgent: new http.Agent({ keepAlive: true }),
         data: {
             'access_key': process.env.ACCESS_KEY,
             'argument': {
