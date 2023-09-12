@@ -11,7 +11,7 @@ WORKDIR /app
 RUN npm install
 
 FROM bitnami/node:12-prod
-ENV NODE_ENV="producting"
+ENV NODE_ENV="production"
 COPY --from=builder /app /app
 WORKDIR /app
 ENV PORT 3000
